@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+bool dfs(int curr, int dest, vector<vector<int>> &adj, vector<bool> &visited) {
+    // already visited
+    if (visited[curr]) return false;
+
+    // destination reached
+    if (curr == dest) return true;
+
+    visited[curr] = true;
+
+    for (int neighbor : adj[curr]) {
+        if (!visited[neighbor] && dfs(neighbor, dest, adj, visited)) {
+            return true; // path found
+        }
+    }
+
+    return false; // no path found
+}
+
+bool checkPath(vector<vector<int>> &adj, int u, int v) {
+    vector<bool> visited(adj.size(), false);
+    return dfs(u, v, adj, visited);
+}
+
+int main() {
+    vector<vector<int>> adj = {
+        {2, 3},
+        {2},
+        {0, 1},
+        {0},
+        {5},
+        {4}
+    };
+
+    int u = 2, v = 3;
+
+    if (checkPath(adj, u, v))
+        cout << "true";
+    else
+        cout << "false";
+
+    return 0;
+}
