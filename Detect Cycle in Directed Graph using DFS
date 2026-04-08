@@ -1,0 +1,62 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// DFS utility function
+bool isCyclicUtil(int u, vector<vector<int>> &adj, vector<bool> &visited, vector<bool> &recStack) {
+    
+    // mark visited and add to recursion stack
+    visited[u] = true;
+    recStack[u] = true;
+
+    // visit all neighbors
+    for (int v : adj[u]) {
+        // if not visited → recurse
+        if (!visited[v]) {
+            if (isCyclicUtil(v, adj, visited, recStack))
+                return true;
+        }
+        // if already in recursion stack → cycle
+        else if (recStack[v]) {
+            return true;
+        }
+    }
+
+    // remove from recursion stack
+    recStack[u] = false;
+    return false;
+}
+
+// Function to detect cycle
+bool isCyclic(vector<vector<int>> &adj) {
+    int V = adj.size();
+    vector<bool> visited(V, false);
+    vector<bool> recStack(V, false);
+
+    for (int i = 0; i < V; i++) {
+        if (!visited[i]) {
+            if (isCyclicUtil(i, adj, visited, recStack))
+                return true;
+        }
+    }
+    return false;
+}
+
+// Driver Code
+int main() {
+    int V = 4;
+
+    vector<vector<int>> adj = {
+        {1},
+        {2},
+        {0, 3},
+        {}
+    };
+
+    if (isCyclic(adj))
+        cout << "true";
+    else
+        cout << "false";
+
+    return 0;
+}
